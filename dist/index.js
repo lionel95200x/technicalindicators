@@ -713,9 +713,9 @@ class FixedSizeLinkedList extends LinkedList {
             if (this.periodHigh <= this.current) {
                 this.periodHigh = this.current;
             }
-            
+
         }
-        
+
     }
     calculatePeriodLow() {
         this.resetCursor();
@@ -725,9 +725,9 @@ class FixedSizeLinkedList extends LinkedList {
             if (this.periodLow >= this.current) {
                 this.periodLow = this.current;
             }
-            
+
         }
-        
+
     }
 }
 
@@ -742,7 +742,7 @@ class SD extends Indicator {
             var tick;
             var mean;
             var currentSet = new FixedSizeLinkedList(period);
-            
+
             tick = yield;
             var sd;
             while (true) {
@@ -1182,7 +1182,7 @@ class ATR extends Indicator {
         this.generator = (function* () {
             var tick = yield;
             var avgTrueRange, trange;
-            
+
             while (true) {
                 trange = trueRange.nextValue({
                     low: tick.low,
@@ -1236,7 +1236,7 @@ class ROC extends Indicator {
         this.generator = (function* () {
             let index = 1;
             var pastPeriods = new FixedSizeLinkedList(period);
-            
+
             var tick = yield;
             var roc;
             while (true) {
@@ -1410,7 +1410,7 @@ class PSAR extends Indicator {
                             extreme = curr.high;
                             accel = Math.min(accel + step, max);
                         }
-                        
+
                     }
                     else {
                         sar = Math.max(sar, furthest.high, prev.high);
@@ -1842,7 +1842,7 @@ class CCI extends Indicator {
         var format = this.format;
         let constant = .015;
         var currentTpSet = new FixedSizeLinkedList(period);
-        
+
         var tpSMACalculator = new SMA({ period: period, values: [], format: (v) => { return v; } });
         if (!((lows.length === highs.length) && (highs.length === closes.length))) {
             throw ('Inputs(low,high, close) not of equal size');
@@ -1858,13 +1858,13 @@ class CCI extends Indicator {
                 let cci;
                 let sum = 0;
                 if (smaTp != undefined) {
-                    //First, subtract the most recent 20-period average of the typical price from each period's typical price. 
+                    //First, subtract the most recent 20-period average of the typical price from each period's typical price.
                     //Second, take the absolute values of these numbers.
-                    //Third,sum the absolute values. 
+                    //Third,sum the absolute values.
                     for (let x of currentTpSet.iterator()) {
                         sum = sum + (Math.abs(x - smaTp));
                     }
-                    //Fourth, divide by the total number of periods (20). 
+                    //Fourth, divide by the total number of periods (20).
                     meanDeviation = sum / 20;
                     cci = (tp - smaTp) / (constant * meanDeviation);
                 }
@@ -1928,7 +1928,7 @@ class VWAP extends Indicator {
                 cumulativeTotal = cumulativeTotal + total;
                 cumulativeVolume = cumulativeVolume + tick.volume;
                 tick = yield cumulativeTotal / cumulativeVolume;
-                
+
             }
         })();
         this.generator.next();
@@ -1991,7 +1991,7 @@ class Renko extends Indicator {
             brickSize = atrResult[atrResult.length - 1];
         }
         this.result = new CandleList();
-        
+
         if (brickSize === 0) {
             console.error('Not enough data to calculate brickSize for renko when using ATR');
             return;
@@ -2581,9 +2581,6 @@ class BullishPatterns extends CandlestickFinder {
     hasPattern(data) {
         return bullishPatterns.reduce(function (state, pattern) {
             let result = pattern.hasPattern(data);
-            if (result) {
-                console.log('Matched pattern ', pattern.name);
-            }
             return state || result;
         }, false);
     }
